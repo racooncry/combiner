@@ -1,0 +1,59 @@
+# spring.cloud.stream.bindings.[output].destination:         交换机的名称
+# spring.cloud.stream.bindings.[output].group:               组，用于生成队列，组名相同时可以实现分布式
+# spring.cloud.stream.bindings.[input].destination:          交换机的名称
+# spring.cloud.stream.bindings.[input].group:                组，用于生成队列，组名相同时可以实现分布式
+# spring.cloud.stream.bindings.[input].consumer.concurrency: 消费者的并发量
+# spring.rabbitmq.addresses:                                 服务器地址
+# spring.rabbitmq.username:                                  账号
+# spring.rabbitmq.password:                                  密码
+# spring.rabbitmq.virtual-host:                              虚拟主机
+
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        input_channel:
+          destination: exchange-3
+          binder: rabbit
+          group: queue-3
+          # https://docs.spring.io/autorepo/docs/spring-cloud-stream-docs/Chelsea.SR2/reference/htmlsingle/#_consumer_properties
+          contentType: text/plain
+      binders:
+        rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: 192.168.1.122
+                port: 5672
+                username: admin
+                password: admin
+                virtual-host: /
+      rabbit:
+        bindings:
+          input_channel:
+            customer:
+              max-concurrency: 5
+              dyrable-subscription: true
+              recovery-interval: 3000
+              acknowledge-mode: MANUAL
+              requeue-rejected: false
+              content-type: text/plain
+              # disables header parsing on input.
+              headerMode: raw
+  application:
+    name: consumer
+  rabbitmq:
+    host: 192.168.1.122
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+server:
+  port: 8002
+
+#management:
+#  health:
+#    rabbit:
+#      enabled: false
