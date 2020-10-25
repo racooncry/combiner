@@ -18,7 +18,7 @@ public class Server2 {
 
         final int DEFAULT_PORT = 8888;
         ServerSocket serverSocket = null;
-
+        final String QUIT = "quit";
         try {
             serverSocket = new ServerSocket(DEFAULT_PORT);
             while (true) {
@@ -42,7 +42,9 @@ public class Server2 {
                     // 回复客户发送的消息
                     bufferedWriter.write("服务器:" + readLine + "\n");
                     bufferedWriter.flush();
-
+                    if (QUIT.equals(readLine)) {
+                        break;
+                    }
                 }
             }
         } catch (IOException e) {
