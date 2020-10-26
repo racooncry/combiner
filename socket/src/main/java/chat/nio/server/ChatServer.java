@@ -5,6 +5,7 @@ import org.springframework.util.StringUtils;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
@@ -50,7 +51,6 @@ public class ChatServer {
                     handles(key);
                 }
                 selectionKeys.clear();
-
             }
 
 
@@ -92,11 +92,35 @@ public class ChatServer {
 
     }
 
+    /**
+     * 转发数据
+     *
+     * @param client
+     * @param forwardMessage
+     * @throws IOException
+     */
+    private void forwardMessage(SocketChannel client, String forwardMessage) throws IOException {
+        for (SelectionKey key : selector.keys()) {
+            Channel connectedClient = key.channel();
+            if (connectedClient instanceof ServerSocketChannel) {
+                continue;
+            }
+            if (key.isValid() && !client.equals(connectedClient)) {
+                wBuffer.clear();
+                wBuffer.put(charset.encode(getClientName(client) + ":" + forwardMessage));
+                wBuffer.flip();
+                while (wBuffer.hasRemaining()) {
+                    ((SocketChannel) connectedClient).write(wBuffer);
+                }
+            }
+        }
+
+
+    }
+
     private String receive(SocketChannel client) throws IOException {
         rBuffer.clear();
-        while (client.read(rBuffer) > 0) {
-            rBuffer.flip();
-        }
+        while (client.read(rBuffer) > 0) ;
         rBuffer.flip();
         return String.valueOf(charset.decode(rBuffer));
     }
@@ -120,6 +144,11 @@ public class ChatServer {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        ChatServer chatServer = new ChatServer();
+        chatServer.start();
     }
 
 }
