@@ -37,6 +37,13 @@ public class Client {
                 ByteBuffer buffer = ByteBuffer.wrap(inputBytes);
                 Future<Integer> write = clientChannel.write(buffer);
 
+                write.get();
+                buffer.flip();
+                Future<Integer> read = clientChannel.read(buffer);
+                read.get();
+                String echo = new String(buffer.array());
+                buffer.clear();
+                System.out.println(echo);
             }
 
 
@@ -46,7 +53,15 @@ public class Client {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            close(clientChannel);
         }
+    }
+
+    public static void main(String[] args) {
+
+        Client client = new Client();
+        client.start();
     }
 
 

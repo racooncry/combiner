@@ -26,7 +26,6 @@ public class Server {
 
 
     private void start() {
-
         try {
             // 绑定监听端口
             // AsynchronousChannelGroup
@@ -45,8 +44,6 @@ public class Server {
         } finally {
             close(serverChannel);
         }
-
-
     }
 
 
@@ -61,8 +58,6 @@ public class Server {
     }
 
     private class AcceptHandler implements CompletionHandler<AsynchronousSocketChannel, Object> {
-
-
         @Override
         public void completed(AsynchronousSocketChannel result, Object attachment) {
             if (serverChannel.isOpen()) {
@@ -78,7 +73,6 @@ public class Server {
                 info.put("type", "read");
                 info.put("buffer", buffer);
                 clientChannel.read(buffer, info, handler);
-
             }
         }
 
