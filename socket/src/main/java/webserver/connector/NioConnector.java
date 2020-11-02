@@ -20,7 +20,7 @@ import java.util.Set;
  * @Description
  * @Version 1.0
  */
-public class NioConnector {
+public class NioConnector implements Runnable{
     private static final int DEFAULT_PORT = 8888;
     private static final String QUIT = "quit";
     private static final int BUFFER = 1024;
@@ -39,35 +39,9 @@ public class NioConnector {
     public NioConnector(int port) {
         this.port = port;
     }
-
-    private void start() {
-        try {
-            server = ServerSocketChannel.open();
-            // 处于非阻塞式模型
-            server.configureBlocking(false);
-            server.socket().bind(new InetSocketAddress(port));
-
-            selector = Selector.open();
-            server.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("启动服务器，监听端口：" + port + "...");
-
-            while (true) {
-                selector.select();
-                Set<SelectionKey> selectionKeys =
-                        selector.selectedKeys();
-                for (SelectionKey key : selectionKeys) {
-                    // 处理被触发的事件
-                    handles(key);
-                }
-                selectionKeys.clear();
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            close(selector);
-        }
+    public void start() {
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
     private void handles(SelectionKey key) throws IOException {
@@ -83,7 +57,7 @@ public class NioConnector {
         else if (key.isReadable()) {
             SocketChannel client = (SocketChannel) key.channel();
             key.cancel();
-            client.configureBlocking(false);
+            client.configureBlocking(true);
             Socket socket = client.socket();
             InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
@@ -159,6 +133,37 @@ public class NioConnector {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            server = ServerSocketChannel.open();
+            // 处于非阻塞式模型
+            server.configureBlocking(false);
+            server.socket().bind(new InetSocketAddress(port));
+
+            selector = Selector.open();
+            server.register(selector, SelectionKey.OP_ACCEPT);
+            System.out.println("启动服务器，监听端口：" + port + "...");
+
+            while (true) {
+                selector.select();
+                Set<SelectionKey> selectionKeys =
+                        selector.selectedKeys();
+                for (SelectionKey key : selectionKeys) {
+                    // 处理被触发的事件
+                    handles(key);
+                }
+                selectionKeys.clear();
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            close(selector);
         }
     }
 }
