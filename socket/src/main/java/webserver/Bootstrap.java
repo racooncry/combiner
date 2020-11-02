@@ -13,12 +13,7 @@ public class Bootstrap {
     public static void main(String[] args) {
 //        Connector connector = new Connector();
         NioConnector connector = new NioConnector();
-
         connector.start();
-
-
-
-
     }
 
 
