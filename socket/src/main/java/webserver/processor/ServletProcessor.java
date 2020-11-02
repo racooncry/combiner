@@ -1,9 +1,7 @@
 package webserver.processor;
 
 
-import webserver.connector.ConnectorUtils;
-import webserver.connector.Request;
-import webserver.connector.Response;
+import webserver.connector.*;
 
 
 import javax.servlet.Servlet;
@@ -28,7 +26,12 @@ public class ServletProcessor {
 
         try {
             Servlet servlet = getServlet(loader, request);
-            servlet.service(request, response);
+            RequestFacade requestFacade = new RequestFacade(request);
+            ResponseFacade responseFacade = new ResponseFacade(response);
+            //  servlet.service(request, response);
+            servlet.service(requestFacade, responseFacade);
+
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

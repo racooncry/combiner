@@ -17,7 +17,7 @@ import java.util.Map;
 public class RequestFacade implements ServletRequest {
     private ServletRequest request = null;
 
-    public RequestFacade(ServletRequest request) {
+    public RequestFacade(Request request) {
         this.request = request;
     }
 
@@ -83,126 +83,126 @@ public class RequestFacade implements ServletRequest {
 
     @Override
     public String getProtocol() {
-        return null;
+        return  this.request.getProtocol();
     }
 
     @Override
     public String getScheme() {
-        return null;
+        return  this.request.getScheme();
     }
 
     @Override
     public String getServerName() {
-        return null;
+        return  this.request.getServerName();
     }
 
     @Override
     public int getServerPort() {
-        return 0;
+        return  this.request.getServerPort();
     }
 
     @Override
     public BufferedReader getReader() throws IOException {
-        return null;
+        return  this.request.getReader();
     }
 
     @Override
     public String getRemoteAddr() {
-        return null;
+        return  this.request.getRemoteAddr();
     }
 
     @Override
     public String getRemoteHost() {
-        return null;
+        return  this.request.getRemoteHost();
     }
 
     @Override
     public void setAttribute(String s, Object o) {
-
+        this.request.setAttribute(s, o);
     }
 
     @Override
     public void removeAttribute(String s) {
-
+        this.request.removeAttribute(s);
     }
 
     @Override
     public Locale getLocale() {
-        return null;
+        return  this.request.getLocale();
     }
 
     @Override
     public Enumeration<Locale> getLocales() {
-        return null;
+        return  this.request.getLocales();
     }
 
     @Override
     public boolean isSecure() {
-        return false;
+        return  this.request.isSecure();
     }
 
     @Override
     public RequestDispatcher getRequestDispatcher(String s) {
-        return null;
+        return  this.request.getRequestDispatcher(s);
     }
 
     @Override
     public String getRealPath(String s) {
-        return null;
+        return  this.request.getRealPath(s);
     }
 
     @Override
     public int getRemotePort() {
-        return 0;
+        return  this.request.getRemotePort();
     }
 
     @Override
     public String getLocalName() {
-        return null;
+        return  this.request.getLocalName();
     }
 
     @Override
     public String getLocalAddr() {
-        return null;
+        return  this.request.getLocalAddr();
     }
 
     @Override
     public int getLocalPort() {
-        return 0;
+        return  this.request.getLocalPort();
     }
 
     @Override
     public ServletContext getServletContext() {
-        return null;
+        return  this.request.getServletContext();
     }
 
     @Override
     public AsyncContext startAsync() throws IllegalStateException {
-        return null;
+        return  this.request.startAsync();
     }
 
     @Override
     public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
-        return null;
+        return  this.request.startAsync();
     }
 
     @Override
     public boolean isAsyncStarted() {
-        return false;
+        return  this.request.isAsyncStarted();
     }
 
     @Override
     public boolean isAsyncSupported() {
-        return false;
+        return  this.request.isAsyncSupported();
     }
 
     @Override
     public AsyncContext getAsyncContext() {
-        return null;
+        return  this.request.getAsyncContext();
     }
 
     @Override
     public DispatcherType getDispatcherType() {
-        return null;
+        return  this.request.getDispatcherType();
     }
 }
