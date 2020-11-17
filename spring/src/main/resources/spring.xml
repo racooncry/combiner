@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bean1" class="ioc.Bean" name="bean_1,bean_2"></bean>
+    <alias name="bean1" alias="bean_3"></alias>
+
+
+    <bean id="bean2" class="ioc.BeanFactory" factory-method="getBean2"></bean>
+
+    <bean class="ioc.BeanFactory3" id="beanFactory3"></bean>
+    <bean class="ioc.Bean3" factory-bean="beanFactory3"
+          factory-method="getBean3" id="bean3"></bean>
+
+
+    <bean id="anotherBean" class="ioc.inject.AnotherBean"></bean>
+
+
+    <bean class="ioc.inject.Bean" id="injectBean">
+        <constructor-arg index="0" name="anotherBean"
+                         type="ioc.inject.AnotherBean" ref="anotherBean"></constructor-arg>
+        <constructor-arg index="1" name="string" type="java.lang.String" value="aaa"></constructor-arg>
+
+        <!--<property name="anotherBean1" ref="anotherBean"></property>-->
+
+        <property name="anotherBean1">
+            <bean class="ioc.inject.AnotherBean"></bean>
+        </property>
+
+
+        <property name="string1" value="bbbb"></property>
+
+
+        <property name="stringList">
+            <list>
+                <value>aaaa</value>
+                <value>bbbb</value>
+            </list>
+        </property>
+        <property name="stringSet">
+            <set>
+                <value>aaaa</value>
+                <value>bbbb</value>
+            </set>
+        </property>
+
+        <property name="anotherBeanList">
+            <list>
+                <ref bean="anotherBean"></ref>
+                <ref bean="anotherBean"></ref>
+            </list>
+        </property>
+
+        <property name="anotherBeanSet">
+            <set>
+                <ref bean="anotherBean"></ref>
+                <ref bean="anotherBean"></ref>
+            </set>
+        </property>
+
+
+        <property name="stringMap">
+            <map>
+                <entry key="ccc" value="dddd"></entry>
+                <entry key="eeee" value="ffff"></entry>
+            </map>
+        </property>
+
+        <property name="anotherBeanMap">
+            <map>
+                <entry key-ref="anotherBean" value-ref="anotherBean"></entry>
+
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="aaaa">bbbbb</prop>
+            </props>
+        </property>
+
+        <property name="anotherBean2">
+            <null></null>
+        </property>
+
+    </bean>
+
+    <!--<bean class="ioc.inject.Bean" id="injectBean" c:anotherBean-ref="anotherBean" c:string="ccccc"-->
+    <!--p:anotherBean1-ref="anotherBean" p:string1="dddddd">-->
+    <!--</bean>-->
+
+
+    <bean class="ioc.singleton.Bean2" id="sbean2"
+          scope="prototype"></bean>
+
+    <bean class="ioc.singleton.Bean1" id="sbean1" scope="singleton">
+        <lookup-method name="createBean2" bean="sbean2"></lookup-method>
+    </bean>
+
+
+    <bean class="ioc.custom.MyScope" id="myScope"></bean>
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="myScope" value-ref="myScope"></entry>
+                <entry key="simpleThreadScope" value-ref="simpleThreadScope"></entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="customBean" class="ioc.custom.Bean" scope="simpleThreadScope"></bean>
+    <bean id="simpleThreadScope" class="org.springframework.context.support.SimpleThreadScope"></bean>
+</beans>

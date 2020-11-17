@@ -18,6 +18,8 @@
     <modules>
         <module>utils</module>
         <module>socket</module>
+        <module>spring</module>
+        <module>spring-web</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
