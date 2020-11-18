@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @Author yangxw
  * @Date 2020-11-18 下午3:55
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Temp {
+public class Temp implements Serializable {
     private Integer id;
     private String value1;
     private String value2;

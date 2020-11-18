@@ -1,5 +1,8 @@
 import entity.Temp;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.executor.CachingExecutor;
+import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -9,6 +12,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +26,84 @@ import java.util.Map;
  */
 
 public class TempTest {
+
+
+    @Test
+    /**
+     * 缓存销毁-sqlSession.close()
+     */
+    public void testCacheCloseCommit() throws IOException, NoSuchFieldException, IllegalAccessException {
+        InputStream stream = Resources.getResourceAsStream("mybatis.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(stream);
+        SqlSession sqlSession = factory.openSession();
+        entity.Temp temp = sqlSession.selectOne("dao.TempDao.getById", 1);
+        System.out.println(temp);
+        sqlSession.commit();
+//        sqlSession.rollback();
+
+        // insert update delete
+
+        entity.Temp temp2 = sqlSession.selectOne("dao.TempDao.getById", 1);
+        System.out.println(temp2);
+
+        System.out.println(temp == temp2);
+
+    }
+
+
+    @Test
+    /**
+     * 缓存销毁-sqlSession.close()
+     */
+    public void testCacheClose() throws IOException, NoSuchFieldException, IllegalAccessException {
+        InputStream stream = Resources.getResourceAsStream("mybatis.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(stream);
+        SqlSession sqlSession = factory.openSession();
+        entity.Temp temp = sqlSession.selectOne("dao.TempDao.getById", 1);
+        System.out.println(temp);
+
+        Field executor = sqlSession.getClass().getDeclaredField("executor");
+        executor.setAccessible(true);
+
+        CachingExecutor cachingExecutor = (CachingExecutor) executor.get(sqlSession);
+        Field delegate = cachingExecutor.getClass().getDeclaredField("delegate");
+        delegate.setAccessible(true);
+        SimpleExecutor simpleExecutor = (SimpleExecutor) delegate.get(cachingExecutor);
+        Field localCache = simpleExecutor.getClass().getSuperclass().getDeclaredField("localCache");
+        localCache.setAccessible(true);
+        PerpetualCache perpetualCache = (PerpetualCache) localCache.get(simpleExecutor);
+        Field cache = perpetualCache.getClass().getDeclaredField("cache");
+        cache.setAccessible(true);
+        Map<Object, Object> map = (Map<Object, Object>) cache.get(perpetualCache);
+        for (Map.Entry<Object, Object> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "  !!!=!!!  " + entry.getValue());
+        }
+        sqlSession.close();
+
+
+        for (Map.Entry<Object, Object> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "  !!!=!!!  " + entry.getValue());
+        }
+        //        entity.Temp temp2 = sqlSession.selectOne("dao.TempDao.getById", 1);
+//        System.out.println(temp2);
+//
+//        System.out.println(temp == temp2);
+
+    }
+
+    @Test
+    /**
+     * 缓存只针对select
+     */
+    public void testCacheBegin() throws IOException {
+        InputStream stream = Resources.getResourceAsStream("mybatis.xml");
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(stream);
+        SqlSession sqlSession = factory.openSession();
+        sqlSession.update("dao.TempDao.getById", 1);
+        sqlSession.update("dao.TempDao.getById", 1);
+
+
+    }
 
 
     @Test
