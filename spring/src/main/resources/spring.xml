@@ -3,7 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="true"
+       default-init-method="onInit"
+       default-destroy-method="onDestory">
 
     <bean id="bean1" class="ioc.Bean" name="bean_1,bean_2"></bean>
     <alias name="bean1" alias="bean_3"></alias>
@@ -112,4 +115,54 @@
 
     <bean id="customBean" class="ioc.custom.Bean" scope="simpleThreadScope"></bean>
     <bean id="simpleThreadScope" class="org.springframework.context.support.SimpleThreadScope"></bean>
+
+
+    <!--    lazy-->
+
+
+    <bean id="lazyBean" class="ioc.lazy.Bean" lazy-init="true"></bean>
+
+
+    <!--    init and destory  -->
+    <bean id="initBean" class="ioc.init.Bean" lazy-init="true" init-method="onInit" destroy-method="onDestory"></bean>
+
+
+    <!--    extend    -->
+    <bean class="ioc.extendBean.ParentClass" abstract="true" id="parentClass">
+        <property name="attribute1" value="attribute1"></property>
+        <property name="attribute2" value="attribute2"></property>
+        <property name="attribute3" value="attribute3"></property>
+    </bean>
+
+    <bean id="class1" class="ioc.extendBean.Class1" parent="parentClass">
+        <property name="attribute4" value="attribute4"></property>
+        <property name="attribute5" value="attribute5"></property>
+    </bean>
+
+    <bean id="class2" class="ioc.extendBean.Class2" parent="parentClass">
+        <property name="attribute7" value="attribute7"></property>
+        <property name="attribute8" value="attribute8"></property>
+    </bean>
+
+
+
+
+
+
+    <bean  abstract="true" id="noParent">
+        <property name="attribute1" value="attribute1"></property>
+        <property name="attribute2" value="attribute2"></property>
+        <property name="attribute3" value="attribute3"></property>
+    </bean>
+
+    <bean id="class1NoParent" class="ioc.extendBean.Class1NoParent" parent="noParent">
+        <property name="attribute4" value="attribute4"></property>
+        <property name="attribute5" value="attribute5"></property>
+    </bean>
+
+    <bean id="class2NoParent" class="ioc.extendBean.Class2NoParent" parent="noParent">
+        <property name="attribute7" value="attribute7"></property>
+        <property name="attribute8" value="attribute8"></property>
+    </bean>
+
 </beans>
