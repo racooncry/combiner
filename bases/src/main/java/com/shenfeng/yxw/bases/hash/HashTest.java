@@ -9,7 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Description
  * @Version 1.0
  */
-public class HashTest {
+public class
+HashTest {
     public static void main(String[] args) {
 
         new Hashtable<>();
