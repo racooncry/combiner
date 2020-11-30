@@ -43,6 +43,7 @@ public class ChatServer {
             System.out.println("启动服务器，监听端口：" + port + "...");
 
             while (true) {
+                // 如果没有注册的keySelection，阻塞调用
                 selector.select();
                 Set<SelectionKey> selectionKeys =
                         selector.selectedKeys();
