@@ -200,5 +200,13 @@ public class IocTest {
         System.out.println(bean_3);
     }
 
+    @Test
+    public void circle() {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        System.out.println("context已经被创建" + context);
+        ioc.circle.A a= context.getBean("cicleA",  ioc.circle.A.class);
+        System.out.println(a);
+
+    }
 
 }
