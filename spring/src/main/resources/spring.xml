@@ -145,11 +145,7 @@
     </bean>
 
 
-
-
-
-
-    <bean  abstract="true" id="noParent">
+    <bean abstract="true" id="noParent">
         <property name="attribute1" value="attribute1"></property>
         <property name="attribute2" value="attribute2"></property>
         <property name="attribute3" value="attribute3"></property>
@@ -164,5 +160,15 @@
         <property name="attribute7" value="attribute7"></property>
         <property name="attribute8" value="attribute8"></property>
     </bean>
+
+
+    <bean id="cycleA" class="ioc.circle.A">
+        <property name="b" ref="cycleB"></property>
+    </bean>
+
+    <bean id="cycleB" class="ioc.circle.B">
+        <property name="a" ref="cycleA"></property>
+    </bean>
+
 
 </beans>
