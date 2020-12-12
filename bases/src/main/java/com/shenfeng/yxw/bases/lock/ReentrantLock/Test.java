@@ -31,6 +31,7 @@ public class Test {
 
         t1.start();
         t2.start();
+//        t1.join();
         System.out.println("main");
     }
 
