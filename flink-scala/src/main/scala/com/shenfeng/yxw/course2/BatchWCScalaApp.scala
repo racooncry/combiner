@@ -1,6 +1,7 @@
 package com.shenfeng.yxw.course2
 
 import org.apache.flink.api.scala.ExecutionEnvironment
+import org.apache.flink.streaming.api.scala._
 
 /**
   * @Author yangxw
