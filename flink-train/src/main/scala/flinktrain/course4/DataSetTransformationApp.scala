@@ -30,9 +30,120 @@ object DataSetTransformationApp {
     // firstFunction(env)
 
     // flatMap
-    flatMapFunction(env)
+    // flatMapFunction(env)
+
+    // distinct
+    // distinctFunction(env)
+
+    // joined
+    // joinedFunction(env)
+
+    // outer joined
+    // outerJoinedFunction(env)
+
+    // 笛卡尔积
+    crossFunction(env)
   }
 
+
+  def crossFunction(env: ExecutionEnvironment): Unit = {
+    val info1 = List("曼联", "曼城")
+    val info2 = List(3, 1, 0)
+
+    val data1 = env.fromCollection(info1)
+    val data2 = env.fromCollection(info2)
+
+    data1.cross(data2).print()
+  }
+
+
+  def outerJoinedFunction(env: ExecutionEnvironment): Unit = {
+    // 编号 名字
+    val info = ListBuffer[(Int, String)]()
+    info.append((1, "PK哥"))
+    info.append((2, "J哥"))
+    info.append((3, "H哥"))
+    info.append((4, "G哥"))
+
+    // 编号 城市
+    val info2 = ListBuffer[(Int, String)]()
+    info2.append((1, "北京"))
+    info2.append((2, "上海"))
+    info2.append((3, "天津"))
+    info2.append((5, "深圳"))
+
+    val data1 = env.fromCollection(info)
+    val data2 = env.fromCollection(info2)
+
+    data1.leftOuterJoin(data2).where(0).equalTo(0).apply((first, second) => {
+      if (second == null) {
+        (first._1, first._2, "-")
+      } else {
+        (first._1, first._2, second._2)
+      }
+
+    }).print()
+
+    println("~~~~~~分隔符~~~~~~~")
+    data1.rightOuterJoin(data2).where(0).equalTo(0).apply((first, second) => {
+      if (first == null) {
+        (second._1, "-", second._2)
+      } else {
+        (first._1, first._2, second._2)
+      }
+
+    }).print()
+
+    println("~~~~~~分隔符~~~~~~~")
+    data1.fullOuterJoin(data2).where(0).equalTo(0).apply((first, second) => {
+      if (first == null) {
+        (second._1, "-", second._2)
+      } else if (second == null) {
+        (first._1, first._2, "-")
+      } else {
+        (first._1, first._2, second._2)
+      }
+
+    }).print()
+
+  }
+
+  def joinedFunction(env: ExecutionEnvironment): Unit = {
+    // 编号 名字
+    val info = ListBuffer[(Int, String)]()
+    info.append((1, "PK哥"))
+    info.append((2, "J哥"))
+    info.append((3, "H哥"))
+    info.append((4, "G哥"))
+
+    // 编号 城市
+    val info2 = ListBuffer[(Int, String)]()
+    info2.append((1, "北京"))
+    info2.append((2, "上海"))
+    info2.append((3, "天津"))
+    info2.append((4, "深圳"))
+
+    val data1 = env.fromCollection(info)
+    val data2 = env.fromCollection(info2)
+
+    data1.join(data2).where(0).equalTo(0).apply((first, second) => {
+      (first._1, first._2, second._2)
+    }).print()
+
+
+  }
+
+  def distinctFunction(env: ExecutionEnvironment): Unit = {
+    val info = ListBuffer[String]()
+    info.append("hadoop,spark")
+    info.append("hadoop,flink")
+
+    info.append("flink,flink")
+
+    val data = env.fromCollection(info)
+    data.flatMap(_.split(",")).distinct().print()
+
+  }
 
   def flatMapFunction(env: ExecutionEnvironment): Unit = {
     val info = ListBuffer[String]()
