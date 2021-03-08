@@ -1,6 +1,9 @@
 package com.shenfeng.yxw.bases.thread.map;
 
+import com.shenfeng.yxw.bases.lambda.StreamList;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 @Slf4j
 public class MapKey {
+    private static Logger log = LoggerFactory.getLogger(MapKey.class);
 
     //循环次数
     private static int LOOP_COUNT = 10000000;

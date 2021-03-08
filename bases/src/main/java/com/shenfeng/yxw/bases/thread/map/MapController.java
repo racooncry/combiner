@@ -1,6 +1,8 @@
 package com.shenfeng.yxw.bases.thread.map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,14 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 @RestController
-@Slf4j
 public class MapController {
 
+    private static Logger log = LoggerFactory.getLogger(MapController.class);
 
     //线程个数
     private static int THREAD_COUNT = 10;

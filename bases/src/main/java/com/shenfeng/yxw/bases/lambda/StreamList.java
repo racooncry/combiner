@@ -1,5 +1,9 @@
 package com.shenfeng.yxw.bases.lambda;
 
+import com.shenfeng.yxw.bases.thread.map.MapController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -8,15 +12,18 @@ import java.nio.file.Files;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StreamList {
+    private static Logger log = LoggerFactory.getLogger(StreamList.class);
 
     private static double calc(List<Integer> ints) {
         List<Point2D> list = new ArrayList<>();
@@ -108,7 +115,6 @@ public class StreamList {
     }
 
 
-
     public void filesExample() throws IOException {
         //无限深度，递归遍历文件夹
         try (Stream<Path> pathStream = Files.walk(Paths.get("."))) {
@@ -121,8 +127,21 @@ public class StreamList {
                     .forEach(System.out::println); //打印所有的行
         }
     }
-    public static void main(String[] args) {
 
+
+    public static void parallel() {
+        // 8核机器  每8个一组
+        IntStream.rangeClosed(1, 100).parallel().forEach(i -> {
+            System.out.println(LocalDateTime.now() + " : " + i);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        parallel();
 
     }
 }
