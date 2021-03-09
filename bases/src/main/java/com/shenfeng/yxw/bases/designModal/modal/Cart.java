@@ -1,7 +1,10 @@
 package com.shenfeng.yxw.bases.designModal.modal;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 // 购物车
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Cart {
     //商品清单
