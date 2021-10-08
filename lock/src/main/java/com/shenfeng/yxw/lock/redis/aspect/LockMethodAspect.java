@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -28,9 +29,9 @@ import java.util.UUID;
 @Aspect
 @Component
 public class LockMethodAspect {
-    @Autowired
+    @Resource
     private RedisLockHelper redisLockHelper;
-    @Autowired
+    @Resource
     private JedisUtil jedisUtil;
     private Logger logger = LoggerFactory.getLogger(LockMethodAspect.class);
 
@@ -39,14 +40,14 @@ public class LockMethodAspect {
         Jedis jedis = jedisUtil.getJedis();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-
+        //  Object[] params = joinPoint.getArgs();
         RedisLock redisLock = method.getAnnotation(RedisLock.class);
         String value = UUID.randomUUID().toString();
         String key = redisLock.key();
         try {
-            final boolean islock = redisLockHelper.lock(jedis, key, value, redisLock.expire(), redisLock.timeUnit());
-            logger.info("isLock : {}", islock);
-            if (!islock) {
+            final boolean isLock = redisLockHelper.lock(jedis, key, value, redisLock.expire(), redisLock.timeUnit());
+            logger.info("isLock : {}", isLock);
+            if (!isLock) {
                 logger.error("获取锁失败");
                 throw new RuntimeException("获取锁失败");
             }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -27,7 +28,7 @@ public class JedisUtil {
     private Map<String, JedisPool> map = new ConcurrentHashMap<>();
 
     private JedisPool getPool() {
-        String key = redisProperties.getHost() + ":" + redisProperties.getHost();
+        String key = redisProperties.getHost() + ":" + redisProperties.getPort();
         JedisPool pool;
         if (!map.containsKey(key)) {
             JedisPoolConfig config = new JedisPoolConfig();
@@ -35,8 +36,8 @@ public class JedisUtil {
             config.setMaxWaitMillis(redisProperties.getMax_wait());
             config.setTestOnBorrow(true);
             config.setTestOnReturn(true);
-
-            pool = new JedisPool(config, redisProperties.getHost(), redisProperties.getPort(), redisProperties.getTimeout(), redisProperties.getPassword());
+            String password = StringUtils.isEmpty(redisProperties.getPassword()) ? null : redisProperties.getPassword();
+            pool = new JedisPool(config, redisProperties.getHost(), redisProperties.getPort(), redisProperties.getTimeout(), password);
             map.put(key, pool);
         } else {
             pool = map.get(key);

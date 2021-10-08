@@ -28,7 +28,7 @@ public class RedisLockHelper {
      * @param timeout
      * @return
      */
-    public boolean lock_setnx(Jedis jedis, String key, String value, int timeout) {
+    public boolean lockSetNx(Jedis jedis, String key, String value, int timeout) {
         Long result = jedis.setnx(key, value);
         // result = 1时，设置成功，否则设置失败
         if (result == 1L) {
@@ -47,7 +47,7 @@ public class RedisLockHelper {
      * @param seconds
      * @return
      */
-    public boolean Lock_with_lua(Jedis jedis, String key, String UniqueId, int seconds) {
+    public boolean lockWithLua(Jedis jedis, String key, String UniqueId, int seconds) {
         String lua_scripts = "if redis.call('setnx',KEYS[1],ARGV[1]) == 1 then" +
                 "redis.call('expire',KEYS[1],ARGV[2]) return 1 else return 0 end";
         List<String> keys = new ArrayList<>();
@@ -91,7 +91,7 @@ public class RedisLockHelper {
      * @return
      * @throws InterruptedException
      */
-    public boolean lock_with_waitTime(Jedis jedis, String key, String value, int timeout, long waitTime, TimeUnit timeUnit) throws InterruptedException {
+    public boolean lockWithWaitTime(Jedis jedis, String key, String value, int timeout, long waitTime, TimeUnit timeUnit) throws InterruptedException {
         long seconds = timeUnit.toSeconds(timeout);
         while (waitTime >= 0) {
             // String result = jedis.set(key, value, "nx", "ex", seconds);
@@ -113,7 +113,7 @@ public class RedisLockHelper {
      *
      * @param key
      */
-    public void unlock_with_del(Jedis jedis, String key) {
+    public void unlockWithDel(Jedis jedis, String key) {
         jedis.del(key);
     }
 
