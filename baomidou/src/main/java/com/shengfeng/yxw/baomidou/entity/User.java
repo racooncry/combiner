@@ -1,8 +1,8 @@
 package com.shengfeng.yxw.baomidou.entity;
 
 import java.io.Serializable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import lombok.*;
 
 /**
  * <p>
@@ -13,7 +13,9 @@ import lombok.EqualsAndHashCode;
  * @since 2020-11-27
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,5 +40,8 @@ public class User implements Serializable {
      */
     private String email;
 
+    public static void main(String[] args) {
+        User build = User.builder().build();
+    }
 
 }
